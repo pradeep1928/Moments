@@ -12,7 +12,7 @@ export const Navbar = () => {
     <AppBar className={classes.appBar} position="static" color="inherit">
       <div className={classes.brandContainer}>
         <Typography
-          conponent={Link}
+          component={Link}
           to="/"
           className={classes.heading}
           variant="h3"
@@ -20,8 +20,8 @@ export const Navbar = () => {
         >
           Moments
         </Typography>
-
       </div>
+      
       <Toolbar className={classes.toolbar}>
         {user ? (
           <div className={classes.profile}>
