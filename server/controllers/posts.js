@@ -1,4 +1,4 @@
-import PostMessage from "../models/postMessage.js";
+import PostMessage from "../models/postModel.js";
 import mongoose from "mongoose";
 
 // Creating all Route functions

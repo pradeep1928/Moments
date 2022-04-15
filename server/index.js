@@ -3,7 +3,9 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+
 import postRoutes from "./routes/posts.js";
+import userRoute from "./routes/users.js";
 
 const app = express();
 dotenv.config();
@@ -15,6 +17,7 @@ app.use(cors()); //for connection to frotend
 
 // Routes
 app.use("/posts", postRoutes);
+app.use("/user", userRoute);
 
 // connection to mongoDB
 mongoose
