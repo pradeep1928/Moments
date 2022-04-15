@@ -1,12 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import useStyles from "./styles";
 
 export const Navbar = () => {
+  // calling and saving the import functions into variables\
   const classes = useStyles();
-  const user = null;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // useState methods
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+
+  // logout function
+  const logout = () => {
+    dispatch({ type: "LOGOUT" });
+    navigate("/");
+    setUser(null);
+  };
+
+  // using useEffect to set the user as soon as login
+  useEffect(() => {
+    // if user exists then it will save the user-token in token variable
+    const token = user?.token;
+
+    setUser(JSON.parse(localStorage.getItem("profile")));
+  }, [location]);
+
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
@@ -21,7 +45,7 @@ export const Navbar = () => {
           Moments
         </Typography>
       </div>
-      
+
       <Toolbar className={classes.toolbar}>
         {user ? (
           <div className={classes.profile}>
@@ -39,12 +63,12 @@ export const Navbar = () => {
 
             <Button
               className={classes.logout}
-              variant="container"
+              variant="contained"
               color="secondary"
+              onClick={logout}
             >
               Logout
             </Button>
-            
           </div>
         ) : (
           <Button
@@ -56,7 +80,6 @@ export const Navbar = () => {
             Sign In
           </Button>
         )}
-        
       </Toolbar>
       {/* <img className={classes.image} src="shareImage" alt="shareImage" height="60" /> */}
     </AppBar>

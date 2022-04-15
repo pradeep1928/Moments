@@ -7,20 +7,25 @@ import {
   Typography,
   Container,
 } from "@material-ui/core";
-import { useDispatch } from 'react-redux';
+import { useNavigate  } from 'react-router-dom';
+import { useDispatch } from "react-redux";
 import LockOutLinedIcon from "@material-ui/icons/LockOutlined";
 import { GoogleLogin } from "react-google-login";
 
 import Icon from "./Icon";
 import Input from "./Input";
-import { AUTH } from "../../constants/actionTypes"
+import { AUTH } from "../../constants/actionTypes";
 import useStyles from "./styles";
 
 export const Auth = () => {
+  // calling and saving the import functions into variables
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const navigate  = useNavigate ();
+
+  // useState Methods 
   const [showPassword, setShowPassword] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
-  const dispatch = useDispatch();
 
   //To show password or hide password when click on the eye icon
   const handleShowPassword = () =>
@@ -39,20 +44,21 @@ export const Auth = () => {
   //To get the responce data when google login is successful
   // '?' is used here - when there is error in res then it will only show undefine.
   const googleSuccess = async (res) => {
-   const result = res?.profileObj; 
-   const token = res?.tokenId;
+    const result = res?.profileObj;
+    const token = res?.tokenId;
 
-   try {
-     dispatch({ type: AUTH, data: { result, token }});
-   } catch (error) {
-     console.log(error);
-   }
-
+    try {
+      dispatch({ type: AUTH, data: { result, token } });
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  // Throw the error when google signIn is unsuccessful 
   const googleFailure = (error) => {
-    console.log(error)
-    console.log("Google Sign In was unseccessfull. Try Again.")
+    console.log(error);
+    console.log("Google Sign In was unseccessfull. Try Again.");
   };
 
   return (
@@ -122,6 +128,7 @@ export const Auth = () => {
             {isSignup ? "Sign Up" : "Sign In"}
           </Button>
 
+          {/* To signIn or signUp using google authentication  */}
           <GoogleLogin
             clientId="383515559731-51j59qq6mqto18l7fh219bi1s7k3lcni.apps.googleusercontent.com"
             render={(renderProps) => (
@@ -141,7 +148,6 @@ export const Auth = () => {
             onFailure={googleFailure}
             cookiePolicy="single_host_origin"
           />
-
 
           <Grid container justifyContent="center">
             <Grid item>
