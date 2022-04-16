@@ -2,14 +2,14 @@ import jwt, { decode } from "jsonwebtoken";
 
 const auth = async (req, res, next) => {
   try {
-    const token = req.headers.Authorization.split(" ")[1];
+    const token = req.headers.authorization.split(' ')[1];
     // checking token for google authentication
     // if tolen.length < 500 then it is google token
     const isCustomAuth = token.length < 500;
     let decodedData;
 
     if (token && isCustomAuth) {
-      decodedData = jwt.verify(token, JWT_SCT);
+      decodedData = jwt.verify(token, process.env.JWT_SCT);
       req.userId = decodedData?.id;
     } else {
       decodedData = jwt.decode(token);

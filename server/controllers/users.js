@@ -6,7 +6,6 @@ import User from "../models/userModel.js";
 // SignIn for user 
 export const signin = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
@@ -19,7 +18,6 @@ export const signin = async (req, res) => {
       existingUser.password
     );
     if (!isPasswordCorrect) {
-      console.log("invalid credential")
       return res.status(400).json({ message: "Invalid credential" });
     }
     const token = jwt.sign(
