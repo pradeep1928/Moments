@@ -22,8 +22,8 @@ const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
- 
-  // function to show like or likes for you and others 
+
+  // function to show like or likes for you and others
   const Likes = () => {
     if (post.likes.length > 0) {
       return post.likes.find(
@@ -34,9 +34,7 @@ const Post = ({ post, setCurrentId }) => {
           &nbsp;
           {post.likes.length > 2
             ? `You and ${post.likes.length - 1} others`
-            : `${post.likes.length} like${
-                post.likes.length > 1 ? "s" : ""
-              }`}
+            : `${post.likes.length} like${post.likes.length > 1 ? "s" : ""}`}
         </>
       ) : (
         <>
@@ -52,7 +50,6 @@ const Post = ({ post, setCurrentId }) => {
       </>
     );
   };
-
 
   return (
     <Card className={classes.card}>
@@ -71,15 +68,19 @@ const Post = ({ post, setCurrentId }) => {
       </div>
 
       {/*this is the 3 dots icon when clicked we can update the post*/}
-      <div className={classes.overlay2}>
-        <Button
-          style={{ color: "white" }}
-          size="small"
-          onClick={() => setCurrentId(post._id)}
-        >
-          <MoreHorizIcon fontSize="medium" />
-        </Button>
-      </div>
+      {/* logic to check if the logedin user created the post or not then only enable the edit button */}
+      {(user?.result?.googleId === post?.creator ||
+        user?.result?._id === post?.creator) && (
+        <div className={classes.overlay2}>
+          <Button
+            style={{ color: "white" }}
+            size="small"
+            onClick={() => setCurrentId(post._id)}
+          >
+            <MoreHorizIcon fontSize="medium" />
+          </Button>
+        </div>
+      )}
 
       {/* post tags*/}
       <div className={classes.details}>
@@ -113,18 +114,22 @@ const Post = ({ post, setCurrentId }) => {
           disabled={!user?.result}
           onClick={() => dispatch(likePost(post._id))}
         >
-         <Likes />
+          <Likes />
           {post.likeCount}{" "}
         </Button>
 
         {/* delete post button*/}
-        <Button
-          size="small"
-          color="primary"
-          onClick={() => dispatch(deletePost(post._id))}
-        >
-          <DeleteIcon fontSize="small" /> &nbsp; Delete
-        </Button>
+        {/* logic to check if the logedin user created the post or not then only enable the delete button */}
+        {(user?.result?.googleId === post?.creator ||
+          user?.result?._id === post?.creator) && (
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => dispatch(deletePost(post._id))}
+          >
+            <DeleteIcon fontSize="small" /> &nbsp; Delete
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
