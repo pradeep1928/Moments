@@ -7,7 +7,7 @@ import {
   Typography,
   Container,
 } from "@material-ui/core";
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import LockOutLinedIcon from "@material-ui/icons/LockOutlined";
 import { GoogleLogin } from "react-google-login";
@@ -15,30 +15,53 @@ import { GoogleLogin } from "react-google-login";
 import Icon from "./Icon";
 import Input from "./Input";
 import { AUTH } from "../../constants/actionTypes";
+import { signin, signup } from "../../actions/auth";
 import useStyles from "./styles";
+
+// setting initial state for form data
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 export const Auth = () => {
   // calling and saving the import functions into variables
   const classes = useStyles();
   const dispatch = useDispatch();
-  const navigate  = useNavigate ();
+  const navigate = useNavigate();
 
-  // useState Methods 
+  // useState Methods
   const [showPassword, setShowPassword] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
+  const [formData, setFormData] = useState(initialState);
 
   //To show password or hide password when click on the eye icon
   const handleShowPassword = () =>
     setShowPassword((prevShowPassword) => !prevShowPassword);
 
-  const handleSubmit = () => {};
+  // function to submit the formData
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const handleChange = () => {};
+    if(isSignup) {
+      dispatch(signup(formData, navigate));
+    } else {
+      dispatch(signin(formData, navigate));
+    }
+    console.log(formData);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   //This function will toggle between signin and signup form
   const switchMode = () => {
     setIsSignup((prevIsSignup) => !prevIsSignup);
-    handleShowPassword(false);
+    setShowPassword(false);
   };
 
   //To get the responce data when google login is successful
@@ -49,13 +72,13 @@ export const Auth = () => {
 
     try {
       dispatch({ type: AUTH, data: { result, token } });
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
 
-  // Throw the error when google signIn is unsuccessful 
+  // Throw the error when google signIn is unsuccessful
   const googleFailure = (error) => {
     console.log(error);
     console.log("Google Sign In was unseccessfull. Try Again.");
@@ -85,8 +108,8 @@ export const Auth = () => {
                 />
 
                 <Input
-                  name="firstName"
-                  label="First Name"
+                  name="lastName"
+                  label="Last Name"
                   handleChange={handleChange}
                   half
                 />

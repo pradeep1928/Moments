@@ -10,6 +10,7 @@ export const signin = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
+      console.log("user doesn't exists")
       return res.status(404).json({ message: "User donsen't exists" });
     }
 
@@ -18,6 +19,7 @@ export const signin = async (req, res) => {
       existingUser.password
     );
     if (!isPasswordCorrect) {
+      console.log("invalid credential")
       return res.status(400).json({ message: "Invalid credential" });
     }
     const token = jwt.sign(
@@ -25,7 +27,7 @@ export const signin = async (req, res) => {
         email: existingUser.email,
         id: existingUser._id,
       },
-      { JWT_SCT },
+      process.env.JWT_SCT ,
       { expiresIn: "3h" }
     );
     res.status(200).json({ result: existingUser, token });
@@ -40,10 +42,12 @@ export const signup = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      console.log("user already exists")
       return res.status(400).json({ message: "User already exists." });
     }
 
     if (password !== confirmPassword) {
+      console.log("password don't match")
       return res.status(400).json({ message: "Password don't match." });
     }
 
@@ -59,11 +63,13 @@ export const signup = async (req, res) => {
         email: result.email,
         id: result._id,
       },
-      { JWT_SCT },
+       process.env.JWT_SCT,
       { expiresIn: "3h" }
     );
-    res.status(200).json({ result, token });
+    res.status(201).json({ result, token });
+    console.log(result)
   } catch (error) {
     res.status(500).send(error);
+    console.log(error)
   }
 };
