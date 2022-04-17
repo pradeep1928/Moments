@@ -3,6 +3,7 @@ import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
+import decode from "jwt-decode";
 
 import useStyles from "./styles";
 
@@ -19,7 +20,7 @@ export const Navbar = () => {
   // logout function
   const logout = () => {
     dispatch({ type: "LOGOUT" });
-    navigate("/");
+    navigate('/auth');
     setUser(null);
   };
 
@@ -27,6 +28,14 @@ export const Navbar = () => {
   useEffect(() => {
     // if user exists then it will save the user-token in token variable
     const token = user?.token;
+
+    // If token expires then logout the user 
+    if (token) {
+      const decodeToken = decode(token);
+      if (decodeToken.exp * 1000 < new Date().getTime()) {
+         logout()
+        };
+    }
 
     setUser(JSON.parse(localStorage.getItem("profile")));
   }, [location]);
