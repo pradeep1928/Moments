@@ -1,5 +1,5 @@
 import * as api from "../api";
-import { CREATE, FETCH_ALL, UPDATE, DELETE} from '../constants/actionTypes'
+import { CREATE, FETCH_ALL, UPDATE, DELETE } from "../constants/actionTypes";
 
 // Action creators
 //get posts
@@ -11,7 +11,6 @@ export const getPosts = () => async (dispatch) => {
     // FETCH_ALL is the action which will fetch all the posts
     // payload contains the data which we have to fetch, here the data is posts.
     dispatch({ type: FETCH_ALL, payload: data });
-    
   } catch (error) {
     console.log(error);
   }
@@ -22,8 +21,8 @@ export const createPost = (post) => async (dispatch) => {
   try {
     const { data } = await api.createPost(post);
 
-// creating new posts using dispatch method of redux
-// CREATE action creates the new post
+    // creating new posts using dispatch method of redux
+    // CREATE action creates the new post
     dispatch({ type: CREATE, payload: data });
   } catch (error) {
     console.log(error);

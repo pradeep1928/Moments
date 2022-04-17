@@ -20,7 +20,7 @@ export const Navbar = () => {
   // logout function
   const logout = () => {
     dispatch({ type: "LOGOUT" });
-    navigate('/auth');
+    navigate("/auth");
     setUser(null);
   };
 
@@ -29,17 +29,16 @@ export const Navbar = () => {
     // if user exists then it will save the user-token in token variable
     const token = user?.token;
 
-    // If token expires then logout the user 
+    // If token expires then logout the user
     if (token) {
       const decodeToken = decode(token);
       if (decodeToken.exp * 1000 < new Date().getTime()) {
-         logout()
-        };
+        logout();
+      }
     }
 
     setUser(JSON.parse(localStorage.getItem("profile")));
   }, [location]);
-
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
